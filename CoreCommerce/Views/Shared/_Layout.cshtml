@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContentAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,12 +13,16 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CoreBooks</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/CoreBooksLogo.png" style="width:40px" /><span class="virtual-bold">CoreBooks</span>
+                    </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -26,9 +33,12 @@
                             <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Order Management</a>
                         </li>
-                        @if(User.IsInRole(SD.Role_Admin)){
+                        
+                        
+                        @if(User.IsInRole(SD.Role_Admin))
+                        {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Content Management
@@ -36,30 +46,43 @@
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">
                                         <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    </li>       
                                     <li class="nav-item">
                                         <a class="dropdown-item" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Companies</a>
+                                    </li>
+                                   
                                     <li><hr class="dropdown-divider"></li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create User</a>
+                                    </li>
                                 </ul>
                             </li>
                         }
-                      
+                     
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+                               @await Component.InvokeAsync("ShoppingCart")
+                                </a>
+                            </li>
+                        
+                        
                     </ul>
                    <partial  name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container-sm">
+    <div class="container-sm pb-4" style="min-height:610px">
         <main role="main" class="pb-3">
             <partial name="_Notification" />
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer bg-primary text-muted">
+    <footer class="border-top footer bg-primary text-muted mt-4" style="margin-top:50px">
         <div class="text-center">
             <i class="bi bi-cc-square"></i> CoreBooks
         </div>

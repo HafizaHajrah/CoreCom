@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBooks.DataAccesses.Repository.IRepository;
 using CoreBooks.Models;
 using CoreBooks.Utility;
 using Microsoft.AspNetCore.Authentication;
@@ -35,6 +36,7 @@ namespace CoreBooks.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             RoleManager<IdentityRole> roleManager,
@@ -42,7 +44,8 @@ namespace CoreBooks.Areas.Identity.Pages.Account
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unitOfWork)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -51,6 +54,7 @@ namespace CoreBooks.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -109,30 +113,33 @@ namespace CoreBooks.Areas.Identity.Pages.Account
             public string? Role { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> ListRole { get; set; }
+            [Required]
+            public string Name { get; set; }
             public string? StreetAddress { get; set; }
             public string? City { get; set; }
             public string? PostalCode { get; set; }
             public string? State { get; set; }
             public string? PhoneNumber { get; set; }
-
+            public int? CompanyId { get; set; }
+            [ValidateNever]
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
-            {
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Company)).GetAwaiter().GetResult();
-            }
+           
             Input = new()
             {
                 ListRole = _roleManager.Roles.Select(r => r.Name).Select(i => new SelectListItem
                 {
                     Text = i,
                     Value = i
+                }),
+                CompanyList = _unitOfWork.Company.GetAll().Select(i => new SelectListItem
+                {
+                    Text=i.CompanyName,
+                    Value = i.CompanyId.ToString()
                 })
             };
            
@@ -151,7 +158,17 @@ namespace CoreBooks.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                user.City = Input.City;
+                user.State = Input.State;
+                user.StreetAddress = Input.StreetAddress;
+                user.PhoneNumber = Input.PhoneNumber;
+                user.PostalCode = Input.PostalCode;
+                user.Name = Input.Name;
 
+                if (Input.Role == SD.Role_Company)
+                {
+                    user.CompanyId=Input.CompanyId;
+                }
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
@@ -181,7 +198,13 @@ namespace CoreBooks.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (User.IsInRole(SD.Role_Admin))
+                        {
+                            TempData["success"] = "New User is created Succcessfully!";
+                        }
+                        else {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
                         return LocalRedirect(returnUrl);
                     }
                 }

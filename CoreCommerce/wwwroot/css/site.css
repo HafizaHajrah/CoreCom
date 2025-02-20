@@ -19,7 +19,6 @@ a.navbar-brand {
 }
 
 
-
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     color: #fff;
     background-color: #1b6ec2;
@@ -35,7 +34,10 @@ html {
         font-size: 16px;
     }
 }
-
+.virtual-bold {
+    font-family: 'Exo', sans-serif;
+    font-weight: 600;
+}
 .border-top {
     border-top: 1px solid #e5e5e5;
 }
@@ -446,7 +448,11 @@ bg-success {
         background-color: #c6883a;
         border-color: #c6883a;
     }
-
+.footer {
+    position: relative !important;
+    margin-top: 50px !important;
+    bottom: auto !important;
+}
 
 
 
@@ -548,3 +554,9 @@ bg-success {
         background-color: #578553;
         border-color: #578553;
     }
+td.dt-type-numeric {
+    text-align: left !important;
+}
+th.dt-type-numeric {
+    text-align: left !important;
+}

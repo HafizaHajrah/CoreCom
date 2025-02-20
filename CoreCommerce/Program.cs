@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using CoreBooks.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Stripe;
+using CoreBooks.DataAccesses.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,13 +16,32 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options=> 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders(); 
+
 builder.Services.ConfigureApplicationCookie(options => {
     options.LoginPath = $"/Identity/Account/Login";
     options.LogoutPath = $"/Identity/Account/Logout";
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+
 });
 
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = "640919335257539";
+    options.AppSecret= "2ef364c5b0889eda564bb964c2f41b52";
+});
+builder.Services.AddDistributedMemoryCache(); // Required for session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(100); // Session timeout
+    options.Cookie.HttpOnly = true; // Prevent client-side access
+    options.Cookie.IsEssential = true; // Ensure session works without consent
+});
+
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
 builder.Services.AddScoped<IEmailSender,EmailSender>();
@@ -35,17 +57,25 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseSession();app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
-
+SeedDatabase();
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void SeedDatabase()
+{
+    using(var scope = app.Services.CreateScope())
+    {
+       var dbInitializer= scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}

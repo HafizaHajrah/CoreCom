@@ -14,6 +14,10 @@ namespace CoreBooks.DataAccesses.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -109,6 +113,28 @@ namespace CoreBooks.DataAccesses.Data
                     ImgUrl = ""
                 }
                 );
+            modelBuilder.Entity<Company>().HasData(
+              new Company
+              {
+                  CompanyId = 2,
+                  CompanyName = "HMOp",
+                  StreetAddress = "23 str Lahore",
+                  State = "Punjab",
+                  City="Lahore",
+                  PostalCode="54000",
+                  PhoneNumber= "023839839"
+              },
+               new Company
+               {
+                   CompanyId = 1,
+                   CompanyName = "HMCo",
+                   StreetAddress = "23 str Lahore",
+                   State = "Punjab",
+                   City = "Lahore",
+                   PostalCode = "54000",
+                   PhoneNumber = "023839839"
+               }
+           );
         }
     }
 }

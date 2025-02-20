@@ -26,9 +26,18 @@ namespace CoreBooks.DataAccesses.Repository
             dbSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeproperties = null)
+        public T Get(Expression<Func<T, bool>> filter, string? includeproperties = null,bool tracked=false)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query;
+                if(tracked)
+                {
+                      query = dbSet;
+                }
+            else
+            {
+                query = dbSet.AsNoTracking();
+            }
+                     
             query=query.Where(filter);
             if (!string.IsNullOrEmpty(includeproperties))
             {
@@ -40,9 +49,13 @@ namespace CoreBooks.DataAccesses.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(string? includeproperties=null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter=null,string? includeproperties=null)
         {
             IQueryable<T> query = dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
             if (!string.IsNullOrEmpty(includeproperties))
             {
                 foreach (var includeprop in includeproperties.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))

@@ -10,7 +10,6 @@ using Microsoft.DotNet.Scaffolding.Shared;
 using NuGet.ProjectModel;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
-/*using System.Reflection.Metadata.Ecma335;*/
 
 namespace CoreBooks.Areas.Admin.Controllers
 {

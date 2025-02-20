@@ -1,0 +1,87 @@
+﻿@model Company
+<div class="card shadow border-0 my-4">
+	<div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h2 class="text-primary">@(Model.CompanyId != 0 ? "Update" : "Create") Company</h2>
+			</div>
+		</div>
+	</div>
+	<div class="card-body p-4">
+		<form method="post" @* enctype="multipart/form-data" *@>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="border p-3">
+						@* <div asp-validation-summary="All"></div> *@
+						<input asp-for="CompanyId" hidden />
+						@* <input asp-for="ImgUrl" hidden /> *@
+
+						<div class="form-floating py-2 col-md-12">
+							<input asp-for="CompanyName" type="text" class="form-control border-0 shadow" />
+							<label asp-for="CompanyName" class="ms-2"></label>
+							<span asp-validation-for="CompanyName" class="text-danger"></span>
+						</div>
+						<div class="form-floating py-2 col-12">
+							<input asp-for="StreetAddress" type="text" class="form-control border-0 shadow" />
+							<label asp-for="StreetAddress" class="ms-2"></label>
+							<span asp-validation-for="StreetAddress" class="text-danger"></span>
+						</div>
+						<div class="form-floating py-2 col-12">
+							<input asp-for="State" type="text" class="form-control border-0 shadow" />
+							<label asp-for="State" class="ms-2"></label>
+							<span asp-validation-for="State" class="text-danger"></span>
+						</div>
+						<div class="form-floating py-2 col-12">
+							<input asp-for="City" type="text" class="form-control border-0 shadow" />
+							<label asp-for="City" class="ms-2"></label>
+							<span asp-validation-for="City" class="text-danger"></span>
+						</div>
+						<div class="form-floating py-2 col-12">
+							<input asp-for="PostalCode" type="text" class="form-control border-0 shadow" />
+							<label asp-for="PostalCode" class="ms-2"></label>
+							<span asp-validation-for="PostalCode" class="text-danger"></span>
+						</div>
+						<div class="form-floating py-2 col-12">
+							<input asp-for="PhoneNumber" type="text" class="form-control border-0 shadow" />
+							<label asp-for="PhoneNumber" class="ms-2"></label>
+							<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+						</div>
+						
+						@* <div class="form-floating py-2 col-12">
+							<input type="file" name="file" class="form-control border-0 shadow" />
+							<label asp-for="ImgUrl" class="ms-2"></label>
+						</div> *@
+					
+						<div class="row pt-2">
+							<div class="col-6 col-md-3 col-lg-4">
+								@if (Model.CompanyId != 0)
+								{
+									<button type="submit" class="btn btn-primary form-control">Update</button>
+								}
+								else
+								{
+									<button type="submit" class="btn btn-primary form-control">Create</button>
+								}
+							</div>
+							<div class="col-6 col-md-6 col-lg-4">
+								<a class="btn btn-outline-secondary border form-control" asp-controller="Company" asp-action="Index">
+									Back To List
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+
+		</form>
+	</div>
+</div>
+
+
+@section Scripts {
+	
+		<partial name="_ValidationScriptsPartial" />
+	
+}
+
