@@ -26,6 +26,17 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
+      - name: Clear NuGet Cache
+        run: dotnet nuget locals all --clear
+
+      - name: Set TLS for NuGet
+        shell: pwsh
+        run: |
+         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+      - name: Restore Dependencies
+        run: dotnet restore --disable-parallel --ignore-failed-sources
+
       - name: dotnet publish
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
