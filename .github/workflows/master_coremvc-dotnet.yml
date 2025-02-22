@@ -23,6 +23,12 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Force correct SDK with DOTNET_ROOT
+        run: echo "DOTNET_ROOT=$(dirname $(which dotnet))" >> $GITHUB_ENV
+
+      - name: Verify .NET version
+        run: dotnet --info
+
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
