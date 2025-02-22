@@ -29,17 +29,6 @@ jobs:
       - name: Force correct SDK with DOTNET_ROOT
         run: echo "DOTNET_ROOT=$(dirname $(which dotnet))" >> $GITHUB_ENV
 
-      - name: Set global.json for .NET 8
-        run: |
-         cat << EOF > global.json
-         {
-           "sdk": {
-             "version": "8.0.406",
-             "rollForward": "disable"
-           }
-         }
-         EOF
-
       - name: Verify .NET version
         run: |
          dotnet --info
