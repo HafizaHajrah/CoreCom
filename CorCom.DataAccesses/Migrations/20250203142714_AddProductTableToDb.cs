@@ -23,7 +23,8 @@ namespace CoreBooks.DataAccesses.Migrations
                     ListPrice = table.Column<double>(type: "float", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     Price50 = table.Column<double>(type: "float", nullable: false),
-                    Price100 = table.Column<double>(type: "float", nullable: false)
+                    Price100 = table.Column<double>(type: "float", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false,defaultValue:1)
                 },
                 constraints: table =>
                 {

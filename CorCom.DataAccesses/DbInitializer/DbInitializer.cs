@@ -1,5 +1,4 @@
 ﻿using CoreBooks.DataAccesses.Data;
-using CoreBooks.DataAccesses.Repository.IRepository;
 using CoreBooks.Models;
 using CoreBooks.Utility;
 using Microsoft.AspNetCore.Identity;
@@ -24,9 +23,9 @@ namespace CoreBooks.DataAccesses.DbInitializer
           RoleManager<IdentityRole> roleManager,
           ApplicationDbContext db)
         {
-            _db=db;
-            _userManager=userManager;
-            _roleManager=roleManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _db =db;         
         }
 
         public void Initialize()
@@ -40,7 +39,7 @@ namespace CoreBooks.DataAccesses.DbInitializer
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"Migration Error: {ex.Message}");
             }
             //create roles if they are not created 
             if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
@@ -67,7 +66,7 @@ namespace CoreBooks.DataAccesses.DbInitializer
                 _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
 
             }
-            
+            return;
         }
     }
 }

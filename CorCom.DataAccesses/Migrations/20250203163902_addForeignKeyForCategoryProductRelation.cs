@@ -9,13 +9,7 @@ namespace CoreBooks.DataAccesses.Migrations
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<int>(
-                name: "CategoryId",
-                table: "Products",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+        {           
 
             migrationBuilder.UpdateData(
                 table: "Products",
