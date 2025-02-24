@@ -7,24 +7,24 @@ function LoadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: '/admin/products/getall' },
         "columns": [       
-            { data: 'title',"width":"25%" },
+            { data: 'title',"width":"20%" },
             { data: 'isbn', "width": "15%" },
             { data: 'author', "width": "15%" },
             { data: 'listPrice', "width": "10%" },
-            { data: 'category.name', "width": "15%" },
+            { data: 'category.name', "width": "10%" },
             {
                 data: 'productId',
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                    <a href="/admin/products/upsert?id=${data}" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i>
+                    <a href="/admin/products/upsert?id=${data}" class="btn btn-primary mx-1"><i class="bi bi-pencil-square"></i>
 						Edit
                     </a>
-                    <a onclick="Delete('/admin/products/delete/${data}')" class="btn btn-danger mx-2"><i class="bi bi-trash-fill"></i>
+                    <a onclick="Delete('/admin/products/delete/${data}')" class="btn btn-danger mx-1"><i class="bi bi-trash-fill"></i>
 						Delete
                     </a>
                     </div>`
                 },
-                "width": "25%" 
+                "width": "30%" 
             }
         ]
     });
