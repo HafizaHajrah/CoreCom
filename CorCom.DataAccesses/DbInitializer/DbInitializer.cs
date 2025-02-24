@@ -52,7 +52,7 @@ namespace CoreBooks.DataAccesses.DbInitializer
                 //if roles are not created then creating the role of Admin
                 _userManager.CreateAsync(new ApplicationUser
                 {
-                    UserName = "mainadmin@.com",
+                    UserName = "mainadmin@gmail.com",
                     Email="mainadmin@gmail.com",
                     Name="Hafiza Hajrah",
                     PhoneNumber="0837387383",
