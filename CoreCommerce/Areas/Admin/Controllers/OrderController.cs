@@ -130,12 +130,12 @@ namespace CoreBooks.Areas.Admin.Controllers
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult Details_Pay_Now()
         {
-
             orderMV.OrderHeaders=_unitOfWork.OrderHeader
                 .Get(u=>u.Id==orderMV.OrderHeaders.Id,includeproperties:"ApplicationUser");
             orderMV.OrderDetailList = _unitOfWork.OrderDetail
                 .GetAll(u => u.OrderHeaderId == orderMV.OrderHeaders.Id, includeproperties: "Product");
-            var domain = "https://localhost:7275/";
+
+            var domain = Request.Scheme+ "://" + Request.Host.Value +"/";
             var options = new Stripe.Checkout.SessionCreateOptions
             {
 
